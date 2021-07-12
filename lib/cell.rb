@@ -21,8 +21,28 @@ class Cell
   end
 
   def fire_upon
-    @ship.hit
+
+    if @ship != nil
+      @ship.hit
+    end
     @fired_upon = true
+  end
+
+  def render(show_ship = false)
+    if !fired_upon? && show_ship == false
+      return "."
+    elsif !fired_upon && show_ship == true && empty? == false
+      return "S"
+    elsif @ship == nil
+      return "M"
+    elsif @ship.sunk?
+      return "X"
+    else
+      return "H"
+    end
+
+
+
   end
 
 end
