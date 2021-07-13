@@ -1,88 +1,96 @@
 require "./lib/ship"
 require "./lib/cell"
 
-
 RSpec.describe Cell do
-  it "exists" do
-    cell = Cell.new("B4")
+  context "cells and coordinates" do
+    it "exists" do
+      cell = Cell.new("B4")
 
-    expect(cell).to be_an_instance_of(Cell)
+      expect(cell).to be_an_instance_of(Cell)
+    end
+
+    it "shows coordinate" do
+      cell = Cell.new("B4")
+
+      expect(cell.coordinate).to eq("B4")
+    end
+
+    it "has a ship" do
+      cell = Cell.new("B4")
+
+      expect(cell.ship).to eq(nil)
+    end
   end
 
-  it "shows coordinate" do
-    cell = Cell.new("B4")
+  context "check and place ship" do
 
-    expect(cell.coordinate).to eq("B4")
+    it "has empty?" do
+      cell = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+
+      expect(cell.empty?).to eq(true)
+
+      cell.place_ship(cruiser)
+
+      expect(cell.empty?).to eq(false)
+    end
+
+    it "places a ship" do
+      cell = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+      cell.place_ship(cruiser)
+
+      expect(cell.ship).to eq(cruiser)
+    end
   end
 
-  it "has a ship" do
-    cell = Cell.new("B4")
-    # ship.new
+  context "actions" do
+    it "has fired upon?" do
+      cell = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+      cell.place_ship(cruiser)
 
-    expect(cell.ship).to eq(nil)
+      expect(cell.fired_upon?).to eq(false)
+    end
+
+    it "has fire upon" do
+      cell = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+      cell.place_ship(cruiser)
+
+      expect(cell.fired_upon?).to eq(false)
+
+      cell.fire_upon
+
+      expect(cell.fired_upon?).to eq(true)
+      expect(cell.ship.health).to eq(2)
+    end
   end
 
-  it "has empty?" do
-    cell = Cell.new("B4")
-    cruiser = Ship.new("Cruiser", 3)
+  context "render" do
+    it "can render its states" do
+      cell_1 = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+      #cell.place_ship(cruiser)
 
-    expect(cell.empty?).to eq(true)
+      expect(cell_1.render).to eq(".")
 
-    cell.place_ship(cruiser)
+      cell_1.fire_upon
+      expect(cell_1.render).to eq("M")
 
-    expect(cell.empty?).to eq(false)
+      cell_1.place_ship(cruiser)
+      expect(cell_1.render).to eq("H")
+
+      cell_2 = Cell.new("C3")
+      ship = Ship.new("Tiny", 1)
+
+      cell_2.place_ship(ship)
+
+      expect(cell_2.render(true)).to eq("S")
+
+      cell_2.fire_upon
+
+      expect(cell_2.render).to eq("X")
+    end
   end
-
-  it "places a ship" do
-    cell = Cell.new("B4")
-    cruiser = Ship.new("Cruiser", 3)
-    cell.place_ship(cruiser)
-
-    expect(cell.ship).to eq(cruiser)
-  end
-
-  it "has fired upon?" do
-    cell = Cell.new("B4")
-    cruiser = Ship.new("Cruiser", 3)
-    cell.place_ship(cruiser)
-
-    expect(cell.fired_upon?).to eq(false)
-  end
-
-  it "has fire upon" do
-    cell = Cell.new("B4")
-    cruiser = Ship.new("Cruiser", 3)
-    cell.place_ship(cruiser)
-
-    expect(cell.fired_upon?).to eq(false)
-
-    cell.fire_upon
-
-    expect(cell.fired_upon?).to eq(true)
-    expect(cell.ship.health).to eq(2)
-  end
-
-  it "can render its states" do
-    cell = Cell.new("B4")
-    cruiser = Ship.new("Cruiser", 3)
-    #cell.place_ship(cruiser)
-
-    expect(cell.render).to eq(".")
-
-
-    cell.fire_upon
-    expect(cell.render).to eq("M")
-
-    cell.place_ship(cruiser)
-    expect(cell.render).to eq("H")
-
-    cell2 = Cell.new("C3")
-    ship = Ship.new("Tiny", 1)
-
-    cell2.place_ship(ship)
-    expect(cell2.render(true)).to eq("S")
-    cell2.fire_upon
-    expect(cell2.render).to eq("X")
-  end
-
 end
