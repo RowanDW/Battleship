@@ -1,7 +1,7 @@
 require "./lib/ship"
 
 RSpec.describe Ship do
-  context "create a ship" do
+  context "attributes" do
     it "exists" do
       ship = Ship.new("Cruiser", 3)
 
