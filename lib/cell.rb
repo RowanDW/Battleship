@@ -12,8 +12,8 @@ class Cell
     @ship == nil
   end
 
-  def place_ship(ship_name)
-    @ship = ship_name
+  def place_ship(ship)
+    @ship = ship
   end
 
   def fired_upon?
