@@ -28,9 +28,9 @@ class Cell
   end
 
   def render(show_ship = false)
-    if !fired_upon? && show_ship == false
+    if fired_upon? == false && show_ship == false
       return "."
-    elsif !fired_upon && show_ship == true && empty? == false
+    elsif fired_upon? == false && show_ship == true && empty? == false
       return "S"
     elsif @ship == nil
       return "M"
