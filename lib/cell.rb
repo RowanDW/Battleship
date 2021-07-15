@@ -28,16 +28,18 @@ class Cell
   end
 
   def render(show_ship = false)
-    if fired_upon? == false && show_ship == false
-      return "."
-    elsif fired_upon? == false && show_ship == true && empty? == false
+    if empty? == false && fired_upon? == false && show_ship == true
       return "S"
-    elsif @ship == nil
-      return "M"
-    elsif @ship.sunk?
-      return "X"
-    else
+    elsif empty? == false && fired_upon? == false && show_ship == false
+      return "."
+    elsif empty? == false && fired_upon? == true && @ship.sunk? == false
       return "H"
+    elsif empty? == false && fired_upon? == true && @ship.sunk? == true
+      return "X"
+    elsif empty? == true && fired_upon? == true
+      return "M"
+    else
+      return "."
     end
   end
 

@@ -1,9 +1,9 @@
 class Board
 
-  attr_reader :board, :cells
+  attr_reader :cells
 
   def initialize
-    @board = board
+    # @board = board
     @cells = create_board
   end
 
@@ -27,12 +27,22 @@ class Board
     @cells.has_key?(coordinate)
   end
 
-  def valid_placement?(ship, coordinate)
-    if ship.length != coordinate.length
+  def valid_placement?(ship, coordinates)
+    coordinates.each do |coordinate|
+      if valid_coordinate?(coordinate) == false
+         return false
+      end
+    end
+
+    if overlapping?(coordinates) == true
+      return false
+    end
+
+    if ship.length != coordinates.length
       false
-    elsif all_in_same_row_consecutive(coordinate) == true
+    elsif all_in_same_row_consecutive(coordinates) == true
       true
-    elsif all_in_same_column_consecutive(coordinate) == true
+    elsif all_in_same_column_consecutive(coordinates) == true
       true
     else
       false
@@ -104,4 +114,35 @@ class Board
     valid_coordinate.include?(actual_coordinate)
   end
 
+  def place(ship, coordinates)
+    if valid_placement?(ship, coordinates) == true
+      coordinates.each do |coordinate|
+        @cells[coordinate].place_ship(ship)
+      end
+    end
+  end
+
+  def overlapping?(coordinates)
+    coordinates.each do |coordinate|
+      if @cells[coordinate].ship != nil
+        return true
+      end
+    end
+    false
+  end
+
+  def render(ship = false)
+    strings = "  1 2 3 4 \n"
+    alphabet = ["A", "B", "C", "D"]
+    numbers = ["1", "2", "3", "4"]
+    alphabet.each do |letter|
+      strings = strings + letter+ " "
+      numbers.each do |number|
+        coordinate = letter + number
+        strings = strings + @cells[coordinate].render(ship) + " "
+      end
+      strings = strings + "\n"
+    end
+    return strings
+  end
 end
