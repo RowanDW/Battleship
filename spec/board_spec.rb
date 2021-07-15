@@ -101,8 +101,56 @@ RSpec.describe Board do
       expect(board.all_in_same_column_consecutive(["C2", "B2", "A2"])).to eq(false)
     end
 
+    it "can place a ship" do
+      board = Board.new
 
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      cell_1 = board.cells["A1"]
+      cell_2 = board.cells["A2"]
+      cell_3 = board.cells["A3"]
 
+      expect(cell_1.ship).to eq(cruiser)
+      expect(cell_2.ship).to eq(cruiser)
+      expect(cell_3.ship).to eq(cruiser)
+      expect(cell_1.ship == cell_2.ship).to eq(true)
+    end
+
+    it "knows when ships are overlapsed" do
+      board = Board.new
+
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+
+      submarine = Ship.new("Submarine", 2)
+
+      expect(board.valid_placement?(submarine, ["A1", "B1"])).to eq(false)
+    end
+
+    it "can render a board" do
+      board = Board.new
+
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+
+      # submarine = Ship.new("Submarine", 2)
+      # board.place(submarine, ["B2", "C2"])
+
+      expect(board.render).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+      expect(board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
+
+      submarine = Ship.new("Submarine", 2)
+      board.place(submarine, ["B2", "C2"])
+
+      expect(board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . S . . \nC . S . . \nD . . . . \n")
+
+      board.cells["A1"].fire_upon
+      board.cells["B4"].fire_upon
+      expect(board.render(true)).to eq("  1 2 3 4 \nA H S S . \nB . S . M \nC . S . . \nD . . . . \n")
+
+      board.cells["B2"].fire_upon
+      board.cells["C2"].fire_upon
+      expect(board.render(true)).to eq("  1 2 3 4 \nA H S S . \nB . X . M \nC . X . . \nD . . . . \n")
+    end
   end
-
 end
