@@ -1,23 +1,47 @@
 class Computer
 
-  attr_reader :player_board, :coordinates_track, :unhit_coordinates
-  def initialize(player_board)
-    @player_board = player_board
-    @unhit_coordinates = player_board.cells.keys
+  attr_reader :coordinates_track, :unhit_coordinates
+
+  def initialize
+    @unhit_coordinates = Board.new.cells.keys
     @coordinates_track = []
   end
 
-  def take_turn
-    coordinate = @unhit_coordinates.sample
-    @player_board.cells[coordinate].fire_upon
-    @unhit_coordinates.delete(coordinate)
-    @coordinates_track << coordinate
-    return @player_board.render
+  def place_ship(computer_board, ship)
+    spaces = computer_board.cells.keys
+    coordinates = []
+    result = "Your spaces are invalid.  Please try again:"
+    until result != "Your spaces are invalid.  Please try again:" do
+      random_coordinate = spaces.sample
+      random_direction = [0, 1].sample
+      random_coordinate_letter = random_coordinate[0]
+      random_coordinate_number = random_coordinate[1]
+
+      if random_direction == 0
+        coordinates << random_coordinate
+        coordinates << random_coordinate_letter + (random_coordinate_number.to_i + 1).to_s
+        coordinates << random_coordinate_letter + (random_coordinate_number.to_i + 2).to_s
+      else
+        coordinates << random_coordinate
+        coordinates << (random_coordinate_letter.ord + 1).to_s + random_coordinate_number
+        coordinates << (random_coordinate_letter.ord + 2).to_s + random_coordinate_number
+      end
+      result = computer_board.place(ship, coordinates)
+    end
+    return computer_board
   end
 
-  def all_player_ships_sunk?
+  def take_turn(player_board)
+    coordinate = @unhit_coordinates.sample
+    player_board.cells[coordinate].fire_upon
+    @unhit_coordinates.delete(coordinate)
+    @coordinates_track << coordinate
+    return player_board
+  end
+
+  def all_player_ships_sunk?(player_board)
     unsunk_ships = []
-     @player_board.cells.each do |coordinate ,cell|
+     player_board.cells.each do |coordinate ,cell|
       if cell.ship != nil && cell.fired_upon? == false
         unsunk_ships << cell
       end
@@ -29,12 +53,12 @@ class Computer
     end
   end
 
-  def display_turn_message
+  def display_turn_message(player_board)
     coordinate = @coordinates_track.last
-    if @player_board.cells[coordinate].ship == nil
+    if player_board.cells[coordinate].ship == nil
       return "The Computer's shot on #{coordinate} was a miss."
-    elsif @player_board.cells[coordinate].ship.sunk? == true
-      return "The Computer's shot on #{coordinate} sunk your #{@player_board.cells[coordinate].ship.name}."
+    elsif player_board.cells[coordinate].ship.sunk? == true
+      return "The Computer's shot on #{coordinate} sunk your #{player_board.cells[coordinate].ship.name}."
     else
       return "The Computer's shot on #{coordinate} was a hit."
     end
