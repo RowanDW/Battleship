@@ -16,20 +16,31 @@ class Player
     else
       @opponent_board.cells[coordinate].fire_upon
       @coordinates_track << coordinate
-      @opponent_board.render
+      return @opponent_board.render
     end
   end
 
   def all_opponent_ships_sunk?
-    unsunk_ships = @opponent_board.cells.find do |cell|
-      cell.ship != nil && cell.fired_upon? == false
+    unsunk_ships = []
+     @opponent_board.cells.each do |coordinate ,cell|
+      if cell.ship != nil && cell.fired_upon? == false
+        unsunk_ships << cell
+      end
     end
-    if unsunk_ships.length > 0
+    if unsunk_ships.count > 0
       return false
     else
       return true
     end
   end
 
-
+  def display_turn_message(coordinate)
+    if @opponent_board.cells[coordinate].ship == nil
+      return "Your shot on #{coordinate} was a miss."
+    elsif @opponent_board.cells[coordinate].ship.sunk? == true
+      return "Your shot on #{coordinate} sunk their #{@opponent_board.cells[coordinate].ship.name}."
+    else
+      return "Your shot on #{coordinate} was a hit."
+    end
+  end
 end
