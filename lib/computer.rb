@@ -9,6 +9,7 @@ class Computer
 
   def place_ship(computer_board, ship)
     spaces = computer_board.cells.keys
+
     coordinates = []
     result = "Your spaces are invalid.  Please try again:"
     until result != "Your spaces are invalid.  Please try again:" do
@@ -18,17 +19,22 @@ class Computer
       random_coordinate_number = random_coordinate[1]
 
       if random_direction == 0
-        coordinates << random_coordinate
-        coordinates << random_coordinate_letter + (random_coordinate_number.to_i + 1).to_s
-        coordinates << random_coordinate_letter + (random_coordinate_number.to_i + 2).to_s
+        counter = 0
+        ship.length.times do
+          coordinates << random_coordinate_letter + (random_coordinate_number.to_i + counter).to_s
+          counter += 1
+        end
       else
-        coordinates << random_coordinate
-        coordinates << (random_coordinate_letter.ord + 1).to_s + random_coordinate_number
-        coordinates << (random_coordinate_letter.ord + 2).to_s + random_coordinate_number
+        counter = 0
+        ship.length.times do
+          coordinates << (random_coordinate_letter.ord + counter).to_s + random_coordinate_number
+          counter += 1
+        end
       end
       result = computer_board.place(ship, coordinates)
     end
-    return computer_board
+    #require 'pry'; binding.pry
+    puts computer_board.render
   end
 
   def take_turn(player_board)
