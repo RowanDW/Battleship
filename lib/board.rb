@@ -119,7 +119,9 @@ class Board
       coordinates.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
-    end
+    else
+      return "Your spaces are invalid.  Please try again:"
+    end  
   end
 
   def overlapping?(coordinates)
