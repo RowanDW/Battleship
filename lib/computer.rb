@@ -10,31 +10,31 @@ class Computer
   def place_ship(computer_board, ship)
     spaces = computer_board.cells.keys
 
-    coordinates = []
+    ship_length = ship.length
     result = "Your spaces are invalid.  Please try again:"
     until result != "Your spaces are invalid.  Please try again:" do
       random_coordinate = spaces.sample
-      random_direction = [0, 1].sample
+      random_direction = 0
       random_coordinate_letter = random_coordinate[0]
       random_coordinate_number = random_coordinate[1]
-
+      coordinates = []
       if random_direction == 0
         counter = 0
-        ship.length.times do
+        ship_length.times do
           coordinates << random_coordinate_letter + (random_coordinate_number.to_i + counter).to_s
           counter += 1
         end
       else
         counter = 0
-        ship.length.times do
-          coordinates << (random_coordinate_letter.ord + counter).to_s + random_coordinate_number
+        ship_length.times do
+          coordinates << (random_coordinate_letter.ord + counter).chr + random_coordinate_number
           counter += 1
         end
       end
       result = computer_board.place(ship, coordinates)
     end
-    #require 'pry'; binding.pry
-    puts computer_board.render
+    require 'pry'; binding.pry
+    return computer_board
   end
 
   def take_turn(player_board)
