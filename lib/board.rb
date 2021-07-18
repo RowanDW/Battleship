@@ -3,7 +3,6 @@ class Board
   attr_reader :cells
 
   def initialize
-    # @board = board
     @cells = create_board
   end
 
