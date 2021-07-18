@@ -52,10 +52,10 @@ RSpec.describe Computer do
     it "can randomly place ships" do
       computer_board = Board.new
       computer = Computer.new
-      ship = Ship.new("Cruiser", 3)
+      #ship = Ship.new("Cruiser", 3)
       ship2 = Ship.new("Submarine", 2)
 
-      expect(computer.place_ship(computer_board, ship).render).not_to eq(computer_board.render(true))
+      expect(computer.place_ship(computer_board, ship2).render).not_to eq(computer_board.render(true))
     end
 
 # TODO

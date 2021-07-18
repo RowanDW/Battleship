@@ -22,31 +22,41 @@ class Game
 
     puts "Enter the squares for the Cruiser (3 spaces):"
 
-    result = "Your spaces are invalid.  Please try again:"
-    until result != "Your spaces are invalid.  Please try again:" do
+    result = "Your spaces are invalid. Please try again:"
+    until result != "Your spaces are invalid. Please try again:" do
       input = gets.chomp.split(" ")
       result = @player_board.place(cruiser, input)
+      if result == String
+
+        puts result
+        require 'pry'; binding.pry
+      end
     end
 
     puts @player_board.render(true)
 
     puts "Enter the squares for the Submarine (2 spaces):"
 
-    result = "Your spaces are invalid.  Please try again:"
-    until result != "Your spaces are invalid.  Please try again:" do
+    result = "Your spaces are invalid. Please try again:"
+    until result != "Your spaces are invalid. Please try again:" do
       input = gets.chomp.split(" ")
       result = @player_board.place(submarine, input)
+      if result == String
+        puts result
+      end
     end
 
     puts @player_board.render(true)
   end
 
   def place_computer_ships
+
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
     @computer.place_ship(@computer_board, cruiser)
     @computer.place_ship(@computer_board, submarine)
-     return @computer_board
+    puts "got to this point"
+    puts @computer_board
   end
 
   def start
@@ -74,16 +84,16 @@ class Game
       @player.display_turn_message(input, @computer_board)
       @computer.display_turn_message(@player_board)
     end
-    endgame
+    puts endgame
   end
 
   def endgame
     if @player.all_opponent_ships_sunk?(@computer_board) == true && @computer.all_player_ships_sunk?(@player_board) == false
-      puts "Player wins!"
+      return "Player wins!"
     elsif @computer.all_player_ships_sunk?(@player_board) == true && @player.all_opponent_ships_sunk?(@computer_board) == false
-      puts "Computer wins!"
+      return "Computer wins!"
     else
-      puts "It's a tie."
+      return "It's a tie."
     end
   end
 end
