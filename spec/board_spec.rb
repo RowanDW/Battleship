@@ -49,28 +49,22 @@ RSpec.describe Board do
     it "has coordinates in the same row" do
       board = Board.new
 
-      # cruiser = Ship.new("Cruiser", 3)
-      # submarine = Ship.new("Submarine", 2)
-
-      expect(board.all_in_same_row(["A1", "A2", "A3"])).to eq(true)
-      expect(board.all_in_same_row(["A2", "A3"])).to eq(true)
-      expect(board.all_in_same_row(["A1", "A2", "B4"])).to eq(false)
-      expect(board.all_in_same_row(["A1", "C1"])).to eq(false)
-      expect(board.all_in_same_row(["A3", "A2", "A1"])).to eq(true)
+      expect(board.all_in_same_row?(["A1", "A2", "A3"])).to eq(true)
+      expect(board.all_in_same_row?(["A2", "A3"])).to eq(true)
+      expect(board.all_in_same_row?(["A1", "A2", "B4"])).to eq(false)
+      expect(board.all_in_same_row?(["A1", "C1"])).to eq(false)
+      expect(board.all_in_same_row?(["A3", "A2", "A1"])).to eq(true)
     end
 
     it "has coordinates in the same row with consecutive numbers" do
       board = Board.new
 
-      # cruiser = Ship.new("Cruiser", 3)
-      # submarine = Ship.new("Submarine", 2)
-
-      expect(board.all_in_same_row_consecutive(["A1", "A2", "A3"])).to eq(true)
-      expect(board.all_in_same_row_consecutive(["A2", "A3"])).to eq(true)
-      expect(board.all_in_same_row_consecutive(["A1", "A2", "B4"])).to eq(false)
-      expect(board.all_in_same_row_consecutive(["A1", "C1"])).to eq(false)
+      expect(board.all_in_same_row_consecutive?(["A1", "A2", "A3"])).to eq(true)
+      expect(board.all_in_same_row_consecutive?(["A2", "A3"])).to eq(true)
+      expect(board.all_in_same_row_consecutive?(["A1", "A2", "B4"])).to eq(false)
+      expect(board.all_in_same_row_consecutive?(["A1", "C1"])).to eq(false)
       # Need to come back and adjust
-      expect(board.all_in_same_row_consecutive(["A3", "A2", "A1"])).to eq(false)
+      expect(board.all_in_same_row_consecutive?(["A3", "A2", "A1"])).to eq(false)
     end
 
 
@@ -80,11 +74,11 @@ RSpec.describe Board do
       # cruiser = Ship.new("Cruiser", 3)
       # submarine = Ship.new("Submarine", 2)
 
-      expect(board.all_in_same_column(["A1", "B1", "C1"])).to eq(true)
-      expect(board.all_in_same_column(["B2", "C2"])).to eq(true)
-      expect(board.all_in_same_column(["A1", "C1", "B4"])).to eq(false)
-      expect(board.all_in_same_column(["A1", "C2"])).to eq(false)
-      expect(board.all_in_same_column(["A3", "A2", "A1"])).to eq(false)
+      expect(board.all_in_same_column?(["A1", "B1", "C1"])).to eq(true)
+      expect(board.all_in_same_column?(["B2", "C2"])).to eq(true)
+      expect(board.all_in_same_column?(["A1", "C1", "B4"])).to eq(false)
+      expect(board.all_in_same_column?(["A1", "C2"])).to eq(false)
+      expect(board.all_in_same_column?(["A3", "A2", "A1"])).to eq(false)
     end
 
     it "has coordinates in the same COLUMN with consecutive chars" do
@@ -93,12 +87,12 @@ RSpec.describe Board do
       # cruiser = Ship.new("Cruiser", 3)
       # submarine = Ship.new("Submarine", 2)
 
-      expect(board.all_in_same_column_consecutive(["A1", "B1", "C1"])).to eq(true)
-      expect(board.all_in_same_column_consecutive(["A2", "B2"])).to eq(true)
-      expect(board.all_in_same_column_consecutive(["A1", "A2", "B4"])).to eq(false)
-      expect(board.all_in_same_column_consecutive(["A1", "C1"])).to eq(false)
+      expect(board.all_in_same_column_consecutive?(["A1", "B1", "C1"])).to eq(true)
+      expect(board.all_in_same_column_consecutive?(["A2", "B2"])).to eq(true)
+      expect(board.all_in_same_column_consecutive?(["A1", "A2", "B4"])).to eq(false)
+      expect(board.all_in_same_column_consecutive?(["A1", "C1"])).to eq(false)
       # Need to come back and adjust
-      expect(board.all_in_same_column_consecutive(["C2", "B2", "A2"])).to eq(false)
+      expect(board.all_in_same_column_consecutive?(["C2", "B2", "A2"])).to eq(false)
     end
 
     it "can place a ship" do

@@ -19,15 +19,15 @@ RSpec.describe Ship do
 
       expect(ship.length).to eq(3)
     end
-  end
 
-  context "actions" do
     it "starts with health equal to length" do
       ship = Ship.new("Cruiser", 3)
 
       expect(ship.health).to eq(3)
     end
+  end
 
+  context "actions" do
     it "sinks" do
       ship = Ship.new("Cruiser", 3)
 

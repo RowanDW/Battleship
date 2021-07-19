@@ -12,6 +12,7 @@ class Game
   def main_menu
      puts "Welcome to BATTLESHIP\n Enter p to play. Enter q to quit."
      input = gets.chomp
+     return input
   end
 
   def place_player_ships
@@ -49,19 +50,20 @@ class Game
   end
 
   def place_computer_ships
-
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
     @computer_board = @computer.place_ship(@computer_board, submarine)
     @computer_board = @computer.place_ship(@computer_board, cruiser)
-    return @computer_board
+    @computer_board
   end
 
-  def start
-    main_menu
-    #place_player_ships
+  def play_game
+    @player_board = Board.new
+    @computer_board = Board.new
+    @player = Player.new
+    @computer = Computer.new
+    place_player_ships
     place_computer_ships
-    require 'pry'; binding.pry
     while @player.all_opponent_ships_sunk?(@computer_board) == false && @computer.all_player_ships_sunk?(@player_board) == false do
       puts " "
       puts "=============COMPUTER BOARD============="
@@ -91,9 +93,23 @@ class Game
 
   def endgame
     if @player.all_opponent_ships_sunk?(@computer_board) == true && @computer.all_player_ships_sunk?(@player_board) == false
-      return "Player wins!"
+      puts "Player wins!"
+      start
     else
-      return "Computer wins!"
+      puts "Computer wins!"
+      start
     end
   end
+
+  def start
+    result = main_menu
+    if result == 'p'
+      play_game
+    elsif result == 'q'
+      exit
+    else
+      start
+    end
+  end
+
 end
