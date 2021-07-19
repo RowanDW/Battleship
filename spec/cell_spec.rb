@@ -20,6 +20,12 @@ RSpec.describe Cell do
 
       expect(cell.ship).to eq(nil)
     end
+
+    it "starts out not fired upon" do
+      cell = Cell.new("B4")
+
+      expect(cell.fired_upon).to eq(false)
+    end
   end
 
   context "check and place ship" do
@@ -51,6 +57,8 @@ RSpec.describe Cell do
       cell.place_ship(cruiser)
 
       expect(cell.fired_upon?).to eq(false)
+      cell.fire_upon
+      expect(cell.fired_upon?).to eq(true)
     end
 
     it "has fire upon" do

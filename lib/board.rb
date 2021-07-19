@@ -9,15 +9,12 @@ class Board
   def create_board
     board_hash = {}
     alphabet = ["A", "B", "C", "D"]
-    row_count = 0
-    4.times do
-      column_count = 1
-      4.times do
-        coordinate = alphabet[row_count] + column_count.to_s
+    numbers = ["1", "2", "3", "4"]
+    alphabet.each do |letter|
+      numbers.each do |num|
+        coordinate = letter + num
         board_hash[coordinate] = Cell.new(coordinate)
-        column_count += 1
       end
-      row_count += 1
     end
     board_hash
   end
@@ -27,43 +24,31 @@ class Board
   end
 
   def valid_placement?(ship, coordinates)
-    coordinates.each do |coordinate|
-      if valid_coordinate?(coordinate) == false
-         return false
-      end
+    not_all_valid = coordinates.any? do |coordinate|
+      valid_coordinate?(coordinate) == false
     end
 
-    if overlapping?(coordinates) == true
-      return false
-    end
-
-    if ship.length != coordinates.length
+    if ship.length != coordinates.length || overlapping?(coordinates) || not_all_valid
       false
-    elsif all_in_same_row_consecutive(coordinates) == true
-      true
-    elsif all_in_same_column_consecutive(coordinates) == true
+    elsif all_in_same_row_consecutive?(coordinates) || all_in_same_column_consecutive?(coordinates)
       true
     else
       false
     end
   end
 
-  def all_in_same_row(coordinate)
-    first_letter = coordinate[0][0]
-    # second_char = coordinate[0][1]
-    coordinate.each do |item|
-      if item[0] != first_letter
-        return false
-      end
+  def all_in_same_row?(coordinates)
+    first_letter = coordinates[0][0]
+    coordinates.all? do |item|
+      item[0] == first_letter
     end
-    true
   end
 
-  def all_in_same_row_consecutive(coordinate)
+  def all_in_same_row_consecutive?(coordinate)
     range = 1..4
     array = range.to_a
 
-    if all_in_same_row(coordinate) == false
+    if all_in_same_row?(coordinate) == false
       return false
     end
 
@@ -81,7 +66,7 @@ class Board
     valid_coordinate.include?(actual_coordinate)
   end
 
-  def all_in_same_column(coordinate)
+  def all_in_same_column?(coordinate)
     same_number = coordinate[0][1]
     coordinate.each do |item|
       if item[1] != same_number
@@ -91,11 +76,11 @@ class Board
     true
   end
 
-  def all_in_same_column_consecutive(coordinate)
+  def all_in_same_column_consecutive?(coordinate)
     range = "A".."D"
     array = range.to_a
 
-    if all_in_same_column(coordinate) == false
+    if all_in_same_column?(coordinate) == false
       return false
     end
 

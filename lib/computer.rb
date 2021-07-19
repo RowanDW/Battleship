@@ -12,9 +12,9 @@ class Computer
 
     ship_length = ship.length
     result = "Your spaces are invalid.  Please try again:"
-    until result != "Your spaces are invalid.  Please try again:" do
+    while result.class == String do
       random_coordinate = spaces.sample
-      random_direction = 0
+      random_direction = [0, 1].sample
       random_coordinate_letter = random_coordinate[0]
       random_coordinate_number = random_coordinate[1]
       coordinates = []
@@ -33,7 +33,6 @@ class Computer
       end
       result = computer_board.place(ship, coordinates)
     end
-    require 'pry'; binding.pry
     return computer_board
   end
 
