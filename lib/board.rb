@@ -28,7 +28,7 @@ class Board
       valid_coordinate?(coordinate) == false
     end
 
-    if ship.length != coordinates.length || overlapping?(coordinates) || not_all_valid
+    if  not_all_valid || ship.length != coordinates.length || overlapping?(coordinates)
       false
     elsif all_in_same_row_consecutive?(coordinates) || all_in_same_column_consecutive?(coordinates)
       true
@@ -44,62 +44,56 @@ class Board
     end
   end
 
-  def all_in_same_row_consecutive?(coordinate)
+  def all_in_same_row_consecutive?(coordinates)
     range = 1..4
     array = range.to_a
 
-    if all_in_same_row?(coordinate) == false
+    if all_in_same_row?(coordinates) == false
       return false
     end
 
-    valid_coordinate = []
-
-    array.each_cons(coordinate.count) do |item|
-      valid_coordinate << item
+    valid_coordinates = []
+    array.each_cons(coordinates.count) do |item|
+      valid_coordinates << item
     end
 
-    actual_coordinate = []
-    coordinate.each do |item|
-      actual_coordinate << item[1].to_i
+    actual_coordinates = coordinates.map do |item|
+      item[1].to_i
     end
 
-    valid_coordinate.include?(actual_coordinate)
+    valid_coordinates.include?(actual_coordinates)
   end
 
-  def all_in_same_column?(coordinate)
-    same_number = coordinate[0][1]
-    coordinate.each do |item|
-      if item[1] != same_number
-        return false
-      end
+  def all_in_same_column?(coordinates)
+    same_number = coordinates[0][1]
+    coordinates.all? do |item|
+      item[1] == same_number
     end
-    true
   end
 
-  def all_in_same_column_consecutive?(coordinate)
+  def all_in_same_column_consecutive?(coordinates)
     range = "A".."D"
     array = range.to_a
 
-    if all_in_same_column?(coordinate) == false
+    if all_in_same_column?(coordinates) == false
       return false
     end
 
-    valid_coordinate = []
+    valid_coordinates = []
 
-    array.each_cons(coordinate.count) do |item|
-      valid_coordinate << item
+    array.each_cons(coordinates.count) do |item|
+      valid_coordinates << item
     end
 
-    actual_coordinate = []
-    coordinate.each do |item|
-      actual_coordinate << item[0]
+    actual_coordinates = coordinates.map do |item|
+      item[0]
     end
 
-    valid_coordinate.include?(actual_coordinate)
+    valid_coordinates.include?(actual_coordinates)
   end
 
   def place(ship, coordinates)
-    if valid_placement?(ship, coordinates) == true
+    if valid_placement?(ship, coordinates)
       coordinates.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
@@ -109,12 +103,9 @@ class Board
   end
 
   def overlapping?(coordinates)
-    coordinates.each do |coordinate|
-      if @cells[coordinate].ship != nil
-        return true
-      end
+    coordinates.any? do |coordinate|
+      @cells[coordinate].ship != nil
     end
-    false
   end
 
   def render(ship = false)
