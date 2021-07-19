@@ -10,17 +10,18 @@ class Game
   end
 
   def main_menu
-     puts "Welcome to BATTLESHIP\n Enter p to play. Enter q to quit."
+    puts " "
+     puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit."
      input = gets.chomp
-     return input
+     input
   end
 
   def place_player_ships
-    puts "I have laid out my ships on the grid.\n You now need to lay out your two ships.\n The Cruiser is three units long and the Submarine is two units long."
+    puts "I have laid out my ships on the grid.\nYou now need to lay out your two ships.\nThe Cruiser is three units long and the Submarine is two units long."
     puts @player_board.render
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
-
+    puts " "
     puts "Enter the squares for the Cruiser (3 spaces):"
 
     result = "Your spaces are invalid. Please try again:"
@@ -33,7 +34,7 @@ class Game
     end
 
     puts @player_board.render(true)
-
+    puts " "
     puts "Enter the squares for the Submarine (2 spaces):"
 
     result = "Your spaces are invalid. Please try again:"
@@ -64,13 +65,13 @@ class Game
     @computer = Computer.new
     place_player_ships
     place_computer_ships
-    while @player.all_opponent_ships_sunk?(@computer_board) == false && @computer.all_player_ships_sunk?(@player_board) == false do
+    puts " "
+    puts "=============COMPUTER BOARD============="
+    puts @computer_board.render
+    puts "==============PLAYER BOARD=============="
+    puts @player_board.render(true)
+    while !all_ships_sunk?(@computer_board) && !all_ships_sunk?(@player_board) do
       puts " "
-      puts "=============COMPUTER BOARD============="
-      puts @computer_board.render(true)
-      puts "==============PLAYER BOARD=============="
-      puts @player_board.render(true)
-
       puts "Enter the coordinate for your shot:"
       result = ""
       input = ''
@@ -84,19 +85,35 @@ class Game
 
       @player_board = @computer.take_turn(@player_board)
 
-       puts ""
+       puts " "
        puts @player.display_turn_message(input, @computer_board)
        puts @computer.display_turn_message(@player_board)
+
+       puts " "
+       puts "=============COMPUTER BOARD============="
+       puts @computer_board.render
+       puts "==============PLAYER BOARD=============="
+       puts @player_board.render(true)
     end
     puts endgame
   end
 
   def endgame
-    if @player.all_opponent_ships_sunk?(@computer_board) == true && @computer.all_player_ships_sunk?(@player_board) == false
+    if all_ships_sunk?(@computer_board) && !all_ships_sunk?(@player_board)
+      puts ""
+      puts "*" * 50
+      puts ""
       puts "Player wins!"
+      puts ""
+      puts "*" * 50
       start
     else
+      puts ""
+      puts "*" * 50
+      puts ""
       puts "Computer wins!"
+      puts ""
+      puts "*" * 50
       start
     end
   end
@@ -110,6 +127,14 @@ class Game
     else
       start
     end
+  end
+
+  def all_ships_sunk?(board)
+    result = board.cells.any? do |coordinate, cell|
+      cell.ship != nil && !cell.fired_upon?
+    end
+
+    !result
   end
 
 end

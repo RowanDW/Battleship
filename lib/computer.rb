@@ -41,28 +41,15 @@ class Computer
     player_board.cells[coordinate].fire_upon
     @unhit_coordinates.delete(coordinate)
     @coordinates_track << coordinate
-    return player_board
+    player_board
   end
 
-  def all_player_ships_sunk?(player_board)
-    unsunk_ships = []
-     player_board.cells.each do |coordinate ,cell|
-      if cell.ship != nil && cell.fired_upon? == false
-        unsunk_ships << cell
-      end
-    end
-    if unsunk_ships.count > 0
-      return false
-    else
-      return true
-    end
-  end
 
   def display_turn_message(player_board)
     coordinate = @coordinates_track.last
     if player_board.cells[coordinate].ship == nil
       return "The Computer's shot on #{coordinate} was a miss."
-    elsif player_board.cells[coordinate].ship.sunk? == true
+    elsif player_board.cells[coordinate].ship.sunk?
       return "The Computer's shot on #{coordinate} sunk your #{player_board.cells[coordinate].ship.name}."
     else
       return "The Computer's shot on #{coordinate} was a hit."

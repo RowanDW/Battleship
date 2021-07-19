@@ -63,16 +63,12 @@ RSpec.describe Board do
       expect(board.all_in_same_row_consecutive?(["A2", "A3"])).to eq(true)
       expect(board.all_in_same_row_consecutive?(["A1", "A2", "B4"])).to eq(false)
       expect(board.all_in_same_row_consecutive?(["A1", "C1"])).to eq(false)
-      # Need to come back and adjust
       expect(board.all_in_same_row_consecutive?(["A3", "A2", "A1"])).to eq(false)
     end
 
 
     it "has coordinates in the same column" do
       board = Board.new
-
-      # cruiser = Ship.new("Cruiser", 3)
-      # submarine = Ship.new("Submarine", 2)
 
       expect(board.all_in_same_column?(["A1", "B1", "C1"])).to eq(true)
       expect(board.all_in_same_column?(["B2", "C2"])).to eq(true)
@@ -81,23 +77,19 @@ RSpec.describe Board do
       expect(board.all_in_same_column?(["A3", "A2", "A1"])).to eq(false)
     end
 
-    it "has coordinates in the same COLUMN with consecutive chars" do
+    it "has coordinates in the same column with consecutive chars" do
       board = Board.new
-
-      # cruiser = Ship.new("Cruiser", 3)
-      # submarine = Ship.new("Submarine", 2)
 
       expect(board.all_in_same_column_consecutive?(["A1", "B1", "C1"])).to eq(true)
       expect(board.all_in_same_column_consecutive?(["A2", "B2"])).to eq(true)
       expect(board.all_in_same_column_consecutive?(["A1", "A2", "B4"])).to eq(false)
       expect(board.all_in_same_column_consecutive?(["A1", "C1"])).to eq(false)
-      # Need to come back and adjust
       expect(board.all_in_same_column_consecutive?(["C2", "B2", "A2"])).to eq(false)
     end
 
     it "can place a ship" do
       board = Board.new
-
+      sub = Ship.new("Submarine", 2)
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
       cell_1 = board.cells["A1"]
@@ -108,17 +100,18 @@ RSpec.describe Board do
       expect(cell_2.ship).to eq(cruiser)
       expect(cell_3.ship).to eq(cruiser)
       expect(cell_1.ship == cell_2.ship).to eq(true)
+
+      expect(board.place(sub, ["E3", "A1"])).to eq("Your spaces are invalid. Please try again:")
     end
 
-    it "knows when ships are overlapsed" do
+    it "knows when ships are overlapped" do
       board = Board.new
 
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
 
-      submarine = Ship.new("Submarine", 2)
-
-      expect(board.valid_placement?(submarine, ["A1", "B1"])).to eq(false)
+      expect(board.overlapping?(["A1", "B1"])).to eq(true)
+      expect(board.overlapping?(["B2", "B3"])).to eq(false)
     end
 
     it "can render a board" do
@@ -126,9 +119,6 @@ RSpec.describe Board do
 
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
-
-      # submarine = Ship.new("Submarine", 2)
-      # board.place(submarine, ["B2", "C2"])
 
       expect(board.render).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
       expect(board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
