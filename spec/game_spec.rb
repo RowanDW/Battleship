@@ -40,35 +40,59 @@ RSpec.describe Game do
   end
 
   context "methods" do
-    xit 'has a welcome message' do
+    it 'has a welcome message and can get an input from user' do
       game = Game.new
 
-      expect(game.main_menu).to eq("Welcome to BATTLESHIP\n Enter p to play. Enter q to quit.")
+      allow(game).to receive(:main_menu).and_return("p")
+
+      expect(game.main_menu).to eq("p")
     end
-    xit 'can determine endgame' do
-      game = Game.new
-      submarine = Ship.new("Submarine", 2)
-      cruiser = Ship.new("Cruiser", 3)
-      game.player_board.place(cruiser, ['A1', 'B1', 'C1'])
-      game.player_board.place(submarine, ['A2', 'B2'])
 
-      game.computer_board.place(cruiser, ['A1', 'B1', 'C1'])
-      game.computer_board.place(submarine, ['A2', 'B2'])
+    it 'can determine if the player won the game' do
+      game = Game.new
+      submarine_1 = Ship.new("Submarine", 2)
+      cruiser_1 = Ship.new("Cruiser", 3)
+      submarine_2 = Ship.new("Submarine", 2)
+      cruiser_2 = Ship.new("Cruiser", 3)
+
+      game.player_board.place(cruiser_1, ['A1', 'B1', 'C1'])
+      game.player_board.place(submarine_1, ['A2', 'B2'])
+
+      game.computer_board.place(cruiser_2, ['A1', 'B1', 'C1'])
+      game.computer_board.place(submarine_2, ['A2', 'B2'])
 
       game.player.take_turn('A1', game.computer_board)
       game.player.take_turn('B1', game.computer_board)
       game.player.take_turn('C1', game.computer_board)
       game.player.take_turn('A2', game.computer_board)
       game.player.take_turn('B2', game.computer_board)
-      # game.player.take_turn('A1', game.player_board)
-      # game.player.take_turn('B1', game.player_board)
-      # game.player.take_turn('C1', game.player_board)
-      # game.player.take_turn('A2', game.player_board)
-      # game.player.take_turn('B2', game.player_board)
-      expect(game.endgame).to eq("Player wins!")
+
+      expect(game.endgame).to eq("**************** Player wins! ****************")
     end
 
-    it 'can determine if all opponent ships have been sunk' do
+    it 'can determine if the computer won the game' do
+      game = Game.new
+      submarine_1 = Ship.new("Submarine", 2)
+      cruiser_1 = Ship.new("Cruiser", 3)
+      submarine_2 = Ship.new("Submarine", 2)
+      cruiser_2 = Ship.new("Cruiser", 3)
+
+      game.player_board.place(cruiser_1, ['A1', 'B1', 'C1'])
+      game.player_board.place(submarine_1, ['A2', 'B2'])
+
+      game.computer_board.place(cruiser_2, ['A1', 'B1', 'C1'])
+      game.computer_board.place(submarine_2, ['A2', 'B2'])
+
+      game.player.take_turn('A1', game.player_board)
+      game.player.take_turn('B1', game.player_board)
+      game.player.take_turn('C1', game.player_board)
+      game.player.take_turn('A2', game.player_board)
+      game.player.take_turn('B2', game.player_board)
+
+      expect(game.endgame).to eq("**************** Computer wins! ****************")
+    end
+
+    it 'can determine if all ships have been sunk' do
       game = Game.new
       ship = Ship.new("Cruiser", 3)
       ship2 = Ship.new("Submarine", 2)
@@ -90,6 +114,5 @@ RSpec.describe Game do
 
       expect(game.all_ships_sunk?(game.computer_board)).to be true
     end
-
   end
 end

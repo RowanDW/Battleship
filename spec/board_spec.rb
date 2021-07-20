@@ -5,13 +5,12 @@ require "./lib/board"
 RSpec.describe Board do
   context "states" do
     it "exists" do
-      board = Board.new
-
+      board = Board.new(10, 10)
       expect(board).to be_an_instance_of(Board)
     end
 
     it "has cells" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.cells.keys).to eq(["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"])
     end
@@ -19,7 +18,7 @@ RSpec.describe Board do
 
   context "behaviors" do
     it "has valid coordinates" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.valid_coordinate?("A1")).to eq(true)
       expect(board.valid_coordinate?("D4")).to eq(true)
@@ -29,7 +28,7 @@ RSpec.describe Board do
     end
 
     it "has valid placement" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       cruiser = Ship.new("Cruiser", 3)
       submarine = Ship.new("Submarine", 2)
@@ -47,7 +46,7 @@ RSpec.describe Board do
     end
 
     it "has coordinates in the same row" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.all_in_same_row?(["A1", "A2", "A3"])).to eq(true)
       expect(board.all_in_same_row?(["A2", "A3"])).to eq(true)
@@ -57,7 +56,7 @@ RSpec.describe Board do
     end
 
     it "has coordinates in the same row with consecutive numbers" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.all_in_same_row_consecutive?(["A1", "A2", "A3"])).to eq(true)
       expect(board.all_in_same_row_consecutive?(["A2", "A3"])).to eq(true)
@@ -66,9 +65,8 @@ RSpec.describe Board do
       expect(board.all_in_same_row_consecutive?(["A3", "A2", "A1"])).to eq(false)
     end
 
-
     it "has coordinates in the same column" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.all_in_same_column?(["A1", "B1", "C1"])).to eq(true)
       expect(board.all_in_same_column?(["B2", "C2"])).to eq(true)
@@ -78,7 +76,7 @@ RSpec.describe Board do
     end
 
     it "has coordinates in the same column with consecutive chars" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       expect(board.all_in_same_column_consecutive?(["A1", "B1", "C1"])).to eq(true)
       expect(board.all_in_same_column_consecutive?(["A2", "B2"])).to eq(true)
@@ -88,7 +86,7 @@ RSpec.describe Board do
     end
 
     it "can place a ship" do
-      board = Board.new
+      board = Board.new(4, 4)
       sub = Ship.new("Submarine", 2)
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
@@ -105,7 +103,7 @@ RSpec.describe Board do
     end
 
     it "knows when ships are overlapped" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
@@ -115,7 +113,7 @@ RSpec.describe Board do
     end
 
     it "can render a board" do
-      board = Board.new
+      board = Board.new(4, 4)
 
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
