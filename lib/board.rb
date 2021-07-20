@@ -1,15 +1,17 @@
 class Board
 
-  attr_reader :cells
+  attr_reader :cells, :last_row, :last_column
 
-  def initialize
+  def initialize(height, width)
+    @last_row = (64 + height).chr
+    @last_column = width.to_s
     @cells = create_board
   end
 
   def create_board
     board_hash = {}
-    alphabet = ["A", "B", "C", "D"]
-    numbers = ["1", "2", "3", "4"]
+    alphabet = ("A"..@last_row).to_a
+    numbers = ("1"..@last_column).to_a
     alphabet.each do |letter|
       numbers.each do |num|
         coordinate = letter + num
@@ -45,7 +47,7 @@ class Board
   end
 
   def all_in_same_row_consecutive?(coordinates)
-    range = 1..4
+    range = 1..@last_column.to_i
     array = range.to_a
 
     if all_in_same_row?(coordinates) == false
@@ -72,7 +74,7 @@ class Board
   end
 
   def all_in_same_column_consecutive?(coordinates)
-    range = "A".."D"
+    range = "A"..@last_row
     array = range.to_a
 
     if all_in_same_column?(coordinates) == false
@@ -109,9 +111,13 @@ class Board
   end
 
   def render(ship = false)
-    strings = "  1 2 3 4 \n"
-    alphabet = ["A", "B", "C", "D"]
-    numbers = ["1", "2", "3", "4"]
+    strings = " "
+    alphabet = ("A"..@last_row).to_a
+    numbers = ("1"..@last_column).to_a
+    numbers.each do |num|
+      strings = strings + " " + num
+    end
+    strings = strings + "\n"
     alphabet.each do |letter|
       strings = strings + letter+ " "
       numbers.each do |number|

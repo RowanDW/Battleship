@@ -1,12 +1,14 @@
 class Game
 
-  attr_reader :player_board, :computer_board, :player, :computer
+  attr_reader :player_board, :computer_board, :player, :computer, :board_height, :board_width
 
   def initialize
-    @player_board = Board.new
-    @computer_board = Board.new
-    @player = Player.new
-    @computer = Computer.new
+    @player_board
+    @computer_board
+    @player
+    @computer
+    @board_height
+    @board_width
   end
 
   def main_menu
@@ -59,15 +61,16 @@ class Game
   end
 
   def play_game
-    @player_board = Board.new
-    @computer_board = Board.new
+    board_size
+    @player_board = Board.new(@board_height, @board_width)
+    @computer_board = Board.new(@board_height, @board_width)
     @player = Player.new
-    @computer = Computer.new
+    @computer = Computer.new(@board_height, @board_width)
     place_player_ships
     place_computer_ships
     puts " "
     puts "=============COMPUTER BOARD============="
-    puts @computer_board.render
+    puts @computer_board.render(true)
     puts "==============PLAYER BOARD=============="
     puts @player_board.render(true)
     while !all_ships_sunk?(@computer_board) && !all_ships_sunk?(@player_board) do
@@ -91,30 +94,21 @@ class Game
 
        puts " "
        puts "=============COMPUTER BOARD============="
-       puts @computer_board.render
+       puts @computer_board.render(true)
        puts "==============PLAYER BOARD=============="
        puts @player_board.render(true)
     end
     puts endgame
+    start
   end
 
   def endgame
     if all_ships_sunk?(@computer_board) && !all_ships_sunk?(@player_board)
       puts ""
-      puts "*" * 50
-      puts ""
-      puts "Player wins!"
-      puts ""
-      puts "*" * 50
-      start
+      return "**************** Player wins! ****************"
     else
       puts ""
-      puts "*" * 50
-      puts ""
-      puts "Computer wins!"
-      puts ""
-      puts "*" * 50
-      start
+      return "**************** Computer wins! ****************"
     end
   end
 
@@ -127,6 +121,13 @@ class Game
     else
       start
     end
+  end
+
+  def board_size
+    puts "Please enter a height for your board ranging from 4 to 26"
+    @board_height = gets.chomp.to_i
+    puts "Please enter a width for your board ranging from 4 to 26"
+    @board_width = gets.chomp.to_i
   end
 
   def all_ships_sunk?(board)
