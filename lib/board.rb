@@ -1,24 +1,22 @@
 class Board
 
-  attr_reader :cells
+  attr_reader :cells, :last_row, :last_column
 
-  def initialize
-    # @board = board
+  def initialize(height = 4, width = 4)
+    @last_row = (64 + height).chr
+    @last_column = width.to_s
     @cells = create_board
   end
 
   def create_board
     board_hash = {}
-    alphabet = ["A", "B", "C", "D"]
-    row_count = 0
-    4.times do
-      column_count = 1
-      4.times do
-        coordinate = alphabet[row_count] + column_count.to_s
+    alphabet = ("A"..@last_row).to_a
+    numbers = ("1"..@last_column).to_a
+    alphabet.each do |letter|
+      numbers.each do |num|
+        coordinate = letter + num
         board_hash[coordinate] = Cell.new(coordinate)
-        column_count += 1
       end
-      row_count += 1
     end
     board_hash
   end
@@ -28,115 +26,108 @@ class Board
   end
 
   def valid_placement?(ship, coordinates)
-    coordinates.each do |coordinate|
-      if valid_coordinate?(coordinate) == false
-         return false
-      end
+    not_all_valid = coordinates.any? do |coordinate|
+      valid_coordinate?(coordinate) == false
     end
 
-    if overlapping?(coordinates) == true
-      return false
-    end
-
-    if ship.length != coordinates.length
+    if  not_all_valid || ship.length != coordinates.length || overlapping?(coordinates)
       false
-    elsif all_in_same_row_consecutive(coordinates) == true
-      true
-    elsif all_in_same_column_consecutive(coordinates) == true
+    elsif all_in_same_row_consecutive?(coordinates) || all_in_same_column_consecutive?(coordinates)
       true
     else
       false
     end
   end
 
-  def all_in_same_row(coordinate)
-    first_letter = coordinate[0][0]
-    # second_char = coordinate[0][1]
-    coordinate.each do |item|
-      if item[0] != first_letter
-        return false
-      end
+  def all_in_same_row?(coordinates)
+    first_letter = coordinates[0][0]
+    coordinates.all? do |item|
+      item[0] == first_letter
     end
-    true
   end
 
-  def all_in_same_row_consecutive(coordinate)
-    range = 1..4
+  def all_in_same_row_consecutive?(coordinates)
+    range = 1..@last_column.to_i
     array = range.to_a
 
-    if all_in_same_row(coordinate) == false
+    if all_in_same_row?(coordinates) == false
       return false
     end
 
-    valid_coordinate = []
-
-    array.each_cons(coordinate.count) do |item|
-      valid_coordinate << item
+    valid_coordinates = []
+    array.each_cons(coordinates.count) do |item|
+      valid_coordinates << item
     end
-
-    actual_coordinate = []
-    coordinate.each do |item|
-      actual_coordinate << item[1].to_i
-    end
-
-    valid_coordinate.include?(actual_coordinate)
-  end
-
-  def all_in_same_column(coordinate)
-    same_number = coordinate[0][1]
-    coordinate.each do |item|
-      if item[1] != same_number
-        return false
+    actual_coordinates = coordinates.map do |item|
+      if item.length == 2
+        item[1].to_i
+      elsif item.length > 2
+        item[1,2].to_i
       end
     end
-    true
+
+    valid_coordinates.include?(actual_coordinates)
   end
 
-  def all_in_same_column_consecutive(coordinate)
-    range = "A".."D"
+  def all_in_same_column?(coordinates)
+    if @last_column.to_i < 10
+      same_number = coordinates[0][1]
+      coordinates.all? do |item|
+        item[1] == same_number
+      end
+    else
+      same_number = coordinates[0][1..2]
+      coordinates.all? do |item|
+        item[1..2] == same_number
+      end
+    end
+  end
+
+  def all_in_same_column_consecutive?(coordinates)
+    range = "A"..@last_row
     array = range.to_a
 
-    if all_in_same_column(coordinate) == false
+    if all_in_same_column?(coordinates) == false
       return false
     end
 
-    valid_coordinate = []
+    valid_coordinates = []
 
-    array.each_cons(coordinate.count) do |item|
-      valid_coordinate << item
+    array.each_cons(coordinates.count) do |item|
+      valid_coordinates << item
     end
 
-    actual_coordinate = []
-    coordinate.each do |item|
-      actual_coordinate << item[0]
+    actual_coordinates = coordinates.map do |item|
+      item[0]
     end
 
-    valid_coordinate.include?(actual_coordinate)
+    valid_coordinates.include?(actual_coordinates)
   end
 
   def place(ship, coordinates)
-    if valid_placement?(ship, coordinates) == true
+    if valid_placement?(ship, coordinates)
       coordinates.each do |coordinate|
         @cells[coordinate].place_ship(ship)
       end
     else
-      return "Your spaces are invalid.  Please try again:"
-    end  
+      return "Your spaces are invalid. Please try again:"
+    end
   end
 
   def overlapping?(coordinates)
-    coordinates.each do |coordinate|
-      if @cells[coordinate].ship != nil
-        return true
-      end
+    coordinates.any? do |coordinate|
+      @cells[coordinate].ship != nil
     end
-    false
   end
 
   def render(ship = false)
-    strings = "  1 2 3 4 \n"
-    alphabet = ["A", "B", "C", "D"]
-    numbers = ["1", "2", "3", "4"]
+    strings = " "
+    alphabet = ("A"..@last_row).to_a
+    numbers = ("1"..@last_column).to_a
+    numbers.each do |num|
+      strings = strings + " " + num
+    end
+    strings = strings + "\n"
     alphabet.each do |letter|
       strings = strings + letter+ " "
       numbers.each do |number|

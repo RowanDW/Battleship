@@ -28,15 +28,15 @@ class Cell
   end
 
   def render(show_ship = false)
-    if empty? == false && fired_upon? == false && show_ship == true
+    if !empty? && !fired_upon? && show_ship
       return "S"
-    elsif empty? == false && fired_upon? == false && show_ship == false
+    elsif !empty? && !fired_upon? && !show_ship
       return "."
-    elsif empty? == false && fired_upon? == true && @ship.sunk? == false
+    elsif !empty? && fired_upon? && !@ship.sunk?
       return "H"
-    elsif empty? == false && fired_upon? == true && @ship.sunk? == true
+    elsif !empty?  && fired_upon? && @ship.sunk?
       return "X"
-    elsif empty? == true && fired_upon? == true
+    elsif empty? && fired_upon?
       return "M"
     else
       return "."

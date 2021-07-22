@@ -26,34 +26,10 @@ RSpec.describe Player do
 
       player.take_turn("A1", opponent_board)
       expect(player.coordinates_track).to eq(["A1"])
-      expect(opponent_board.render).to eq("  1 2 3 4 \nA M . . . \nB . . . . \nC . . . . \nD . . . . \n")
+      expect(opponent_board.render).to eq("  1 2 3 4\nA M . . . \nB . . . . \nC . . . . \nD . . . . \n")
 
       expect(player.take_turn("A1", opponent_board)).to eq("You have already entered this coordinate. Try again:")
       expect(player.take_turn("Z1", opponent_board)).to eq("This is an invalid coordinate. Try again:")
-    end
-
-    it 'can determine if all opponent ships have been sunk' do
-      opponent_board = Board.new
-      player = Player.new
-      ship = Ship.new("Cruiser", 3)
-      ship2 = Ship.new("Submarine", 2)
-      opponent_board.place(ship, ["A1", "A2", "A3"])
-
-      player.take_turn("A1", opponent_board)
-      player.take_turn("A2", opponent_board)
-      expect(player.all_opponent_ships_sunk?(opponent_board)).to be false
-
-      player.take_turn("A3", opponent_board)
-      expect(player.all_opponent_ships_sunk?(opponent_board)).to be true
-
-      opponent_board.place(ship2, ["B2", "C2"])
-
-      expect(player.all_opponent_ships_sunk?(opponent_board)).to be false
-
-      player.take_turn("B2", opponent_board)
-      player.take_turn("C2", opponent_board)
-
-      expect(player.all_opponent_ships_sunk?(opponent_board)).to be true
     end
 
     it 'creates turn messages' do
@@ -74,5 +50,4 @@ RSpec.describe Player do
       expect(player.display_turn_message("A3", opponent_board)).to eq("Your shot on A3 sunk their Cruiser.")
     end
   end
-
 end

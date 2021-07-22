@@ -30,45 +30,57 @@ RSpec.describe Computer do
       board = Board.new
       computer = Computer.new
 
+      allow(computer).to receive(:get_random_unhit_coordinates).and_return("A3")
+
       board = computer.take_turn(board)
+
       expect(computer.unhit_coordinates.length).to eq(15)
-      expect(board.render).not_to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
-    end
-
-    it 'can determine if all opponent ships have been sunk' do
-      board = Board.new
-      computer = Computer.new
-      ship = Ship.new("Cruiser", 3)
-      ship2 = Ship.new("Submarine", 2)
-      board.place(ship, ["A1", "A2", "A3"])
-
-      expect(computer.all_player_ships_sunk?(board)).to be false
-      16.times do
-        board = computer.take_turn(board)
-      end
-      expect(computer.all_player_ships_sunk?(board)).to be true
+      expect(computer.coordinates_track).to eq(["A3"])
+      expect(board.render).to eq("  1 2 3 4\nA . . M . \nB . . . . \nC . . . . \nD . . . . \n")
     end
 
     it "can randomly place ships" do
       computer_board = Board.new
       computer = Computer.new
-      ship = Ship.new("Cruiser", 3)
       ship2 = Ship.new("Submarine", 2)
 
-      expect(computer.place_ship(computer_board, ship).render).not_to eq(computer_board.render(true))
+      allow(computer).to receive(:get_random_coordinate).and_return("A1")
+      allow(computer).to receive(:get_random_direction).and_return(0)
+
+      expect(computer.place_ship(computer_board, ship2).render(true)).to eq("  1 2 3 4\nA S S . . \nB . . . . \nC . . . . \nD . . . . \n")
+
+      cruiser = Ship.new("Cruiser", 3)
+
+      allow(computer).to receive(:get_random_coordinate).and_return("B2")
+      allow(computer).to receive(:get_random_direction).and_return(1)
+
+      expect(computer.place_ship(computer_board, cruiser).render(true)).to eq("  1 2 3 4\nA S S . . \nB . S . . \nC . S . . \nD . S . . \n")
     end
 
-# TODO
     it 'can display turn messages' do
       board = Board.new
       computer = Computer.new
       ship = Ship.new("Cruiser", 3)
       ship2 = Ship.new("Submarine", 2)
-      board.place(ship, ["A1", "A2", "A3"])
+      board.place(ship2, ["A1", "A2"])
+
+      allow(computer).to receive(:get_random_unhit_coordinates).and_return("A3")
 
       board = computer.take_turn(board)
-      expect(computer.display_turn_message(board)).to be_a(String)
+
+      expect(computer.display_turn_message(board)).to eq("The Computer's shot on A3 was a miss.")
+
+      allow(computer).to receive(:get_random_unhit_coordinates).and_return("A1")
+
+      board = computer.take_turn(board)
+
+      expect(computer.display_turn_message(board)).to eq("The Computer's shot on A1 was a hit.")
+
+      allow(computer).to receive(:get_random_unhit_coordinates).and_return("A2")
+
+      board = computer.take_turn(board)
+
+      expect(computer.display_turn_message(board)).to eq("The Computer's shot on A2 sunk your Submarine.")
     end
   end
-
 end
