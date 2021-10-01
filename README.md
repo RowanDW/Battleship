@@ -12,7 +12,7 @@
 ## General info
 This project is a command line implementation of the game Battleship. Users can try their luck against a computer opponent. The program is place user and computer ships, display turns, and has an adjustable board size. 
 
-This version include a personal extension that makes the computer's actions more intelligent.
+This version includes a personal extension that makes the computer's actions more intelligent.
 
 ## Learning Goals
 * Utilize Test Driven Development
